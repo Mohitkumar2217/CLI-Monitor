@@ -1,0 +1,23 @@
+interval: 10
+disk_path: /
+log_file: /var/log/syswatch/syswatch.log
+
+thresholds:
+  cpu: 85
+  memory: 90
+  disk: 90
+
+top_processes:
+  enabled: true
+  count: 5
+  sort_by: cpu   # cpu | memory
+
+notifiers:
+  log:
+    enabled: true
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/triggers/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"
+  pagerduty:
+    enabled: false
+    routing_key: "REPLACE_WITH_YOUR_ROUTING_KEY"
