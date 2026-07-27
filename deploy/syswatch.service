@@ -1,0 +1,29 @@
+[Unit]
+Description=syswatch - system resource monitor with alerting
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Run as an unprivileged, dedicated user rather than root.
+# Create with: useradd --system --no-create-home --shell /usr/sbin/nologin syswatch
+User=syswatch
+Group=syswatch
+
+ExecStart=/usr/bin/python3 -m syswatch.cli --config /etc/syswatch/config.yaml
+WorkingDirectory=/opt/syswatch
+
+Restart=on-failure
+RestartSec=5
+
+# Hardening: the service only needs to read /proc for metrics and make
+# outbound HTTPS calls to Slack/PagerDuty — it needs no write access to
+# the filesystem beyond its own log file.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/syswatch
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
